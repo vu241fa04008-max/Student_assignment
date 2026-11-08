@@ -1,0 +1,2430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vignan's Student Assignment Portal — R22 C24 Regulation</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background-color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #0f172a;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; }
+  </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- ==================== AUTHENTICATION SCREEN ==================== -->
+  <div id="auth-screen" class="min-h-screen flex flex-col justify-between">
+    
+    <!-- Top Header -->
+    <header class="bg-slate-900 border-b border-slate-800 text-white py-3.5 px-6 shadow-sm">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-lg text-white shadow-xs">
+            V
+          </div>
+          <div>
+            <div class="font-bold text-sm tracking-wide text-white uppercase">
+              Vignan's Foundation for Science, Technology & Research
+            </div>
+            <div class="text-xs text-slate-400">
+              (Deemed to be University) • R22 C24 Academic Regulation Portal
+            </div>
+          </div>
+        </div>
+        <div class="hidden md:flex items-center gap-4 text-xs text-slate-300">
+          <span class="bg-slate-800 px-2.5 py-1 rounded border border-slate-700">R22 C24 Syllabus</span>
+          <span>•</span>
+          <span>AY 2026-27</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Auth Card -->
+    <main class="flex-1 flex items-center justify-center p-4 sm:p-6 my-6">
+      <div class="w-full max-w-lg bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        
+        <div class="bg-slate-50 border-b border-slate-200 p-6 text-center">
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">
+            Academic Assignment Portal
+          </h2>
+          <p class="text-xs text-slate-500 mt-1">
+            Select your academic role to proceed with verified institutional access
+          </p>
+        </div>
+
+        <div class="p-6 sm:p-8">
+          
+          <!-- Role Selector: Student vs Faculty -->
+          <div class="grid grid-cols-2 gap-2 p-1.5 rounded-lg bg-slate-100 border border-slate-200 mb-5">
+            <button
+              id="role-tab-student"
+              type="button"
+              onclick="selectAuthRole('student')"
+              class="py-2.5 px-3 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-2 bg-blue-600 text-white shadow-xs cursor-pointer"
+            >
+              <span>🎓</span>
+              <span>Student Portal</span>
+            </button>
+            <button
+              id="role-tab-faculty"
+              type="button"
+              onclick="selectAuthRole('faculty')"
+              class="py-2.5 px-3 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900 bg-transparent cursor-pointer"
+            >
+              <span>👨‍🏫</span>
+              <span>Faculty Portal</span>
+            </button>
+          </div>
+
+          <!-- Role Capability Notice -->
+          <div id="role-notice" class="p-3 rounded-lg border text-xs mb-5 font-medium bg-blue-50 border-blue-200 text-blue-900">
+            <strong>Student Access:</strong> View assignments for R22 C24 courses & submit answers in PDF format.
+          </div>
+
+          <!-- Google SSO Button -->
+          <button
+            type="button"
+            id="btn-google-login"
+            onclick="loginWithGoogle()"
+            class="w-full py-2.5 px-4 rounded-lg border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center justify-center gap-3 transition-colors shadow-xs mb-4 cursor-pointer"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3h3.86c2.26-2.09 3.68-5.17 3.68-9.09z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.27v3.09C3.25 21.3 7.31 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.13-1.57.38-2.29V6.62H1.27C.46 8.23 0 10.06 0 12s.46 3.77 1.27 5.38l4-3.09z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.25 2.7 1.27 6.62l4 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/>
+            </svg>
+            <span id="google-btn-text">Continue with Google (vu.241fa04008@vignan.ac.in)</span>
+          </button>
+
+          <!-- Divider -->
+          <div class="relative flex items-center justify-center my-4">
+            <div class="border-t border-slate-200 w-full"></div>
+            <span class="bg-white px-3 text-[11px] uppercase tracking-wider text-slate-400 font-medium absolute">
+              Or sign in with Vignan ID
+            </span>
+          </div>
+
+          <!-- Credentials Form -->
+          <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+            
+            <!-- Student Form Fields -->
+            <div id="student-auth-fields" class="space-y-4">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">
+                    Assigned Student ID <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="student-id-input"
+                    value="241FA04008"
+                    placeholder="241FA04008"
+                    class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 font-mono font-bold uppercase focus:border-blue-600"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Regulation</label>
+                  <input
+                    type="text"
+                    disabled
+                    value="R22 C24 Regulation"
+                    class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 bg-slate-50 text-slate-600 font-semibold"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">
+                  Official University Email <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="student-email-input"
+                  value="vu.241fa04008@vignan.ac.in"
+                  placeholder="vu.241fa04008@vignan.ac.in"
+                  class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 font-medium focus:border-blue-600"
+                />
+              </div>
+
+              <button
+                type="submit"
+                class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-lg shadow-xs transition-colors cursor-pointer"
+              >
+                Sign In as Student (ID: 241FA04008)
+              </button>
+            </div>
+
+            <!-- Faculty Form Fields -->
+            <div id="faculty-auth-fields" class="hidden space-y-4">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Faculty ID</label>
+                  <input
+                    type="text"
+                    id="faculty-id-input"
+                    value="VU-FAC-102"
+                    placeholder="VU-FAC-102"
+                    class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 font-mono font-bold uppercase"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Faculty Name</label>
+                  <input
+                    type="text"
+                    id="faculty-name-input"
+                    value="Dr. K. Srinivas"
+                    class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Faculty University Email</label>
+                <input
+                  type="email"
+                  id="faculty-email-input"
+                  value="dr.srinivas.cse@vignan.ac.in"
+                  class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 font-medium"
+                />
+              </div>
+
+              <button
+                type="submit"
+                class="w-full py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-lg shadow-xs transition-colors cursor-pointer"
+              >
+                Sign In as Faculty (Dr. K. Srinivas)
+              </button>
+            </div>
+
+          </form>
+
+          <!-- Quick Evaluator Access -->
+          <div class="mt-6 pt-5 border-t border-slate-200 space-y-2">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center mb-1">
+              Quick Evaluator Testing
+            </div>
+            <button
+              type="button"
+              onclick="loginQuickStudent()"
+              class="w-full py-2 px-3 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors cursor-pointer flex items-center justify-between"
+            >
+              <span>🎓 Launch as Student: 241FA04008</span>
+              <span className="text-[10px] bg-blue-200 px-1.5 py-0.5 rounded text-blue-800">Submit PDF</span>
+            </button>
+            <button
+              type="button"
+              onclick="loginQuickFaculty()"
+              class="w-full py-2 px-3 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg transition-colors cursor-pointer flex items-center justify-between"
+            >
+              <span>👨‍🏫 Launch as Faculty: Dr. K. Srinivas</span>
+              <span className="text-[10px] bg-slate-300 px-1.5 py-0.5 rounded text-slate-900">Add & Grade</span>
+            </button>
+          </div>
+
+        </div>
+
+        <div class="bg-slate-50 px-6 py-3 border-t border-slate-200 text-center text-[11px] text-slate-500">
+          Secure SSL Encrypted Connection • Vignan IT Systems &copy; 2026
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-3 px-6 text-center text-xs text-slate-500">
+      Vignan's Foundation for Science, Technology and Research • Vadlamudi, Guntur, Andhra Pradesh, India
+    </footer>
+  </div>
+
+
+  <!-- ==================== MAIN DASHBOARD WORKSPACE ==================== -->
+  <div id="main-workspace" class="hidden min-h-screen flex flex-col justify-between">
+    
+    <div>
+      <!-- Top Institutional Header -->
+      <header class="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-30 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
+          
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white shadow-xs">
+              V
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h1 class="text-base font-bold text-white tracking-tight">
+                  Vignan's Student Assignment Portal
+                </h1>
+                <span class="hidden sm:inline-block px-2 py-0.5 text-[10px] font-bold rounded bg-blue-900/80 text-blue-200 border border-blue-700">
+                  R22 C24 Regulation
+                </span>
+              </div>
+              <div class="text-xs text-slate-400">
+                Vignan's Foundation for Science, Technology & Research (Deemed to be University)
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 self-end md:self-auto text-xs">
+            
+            <!-- User Badge -->
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 font-medium">
+              <div class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold" id="user-avatar-initial">
+                V
+              </div>
+              <div>
+                <span class="font-bold" id="user-display-name">Venkatesh Rao</span>
+                <span class="text-slate-400 ml-1.5 font-mono" id="user-display-reg">(241FA04008)</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onclick="resetDemoData()"
+              class="px-2.5 py-1.5 rounded border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium cursor-pointer transition-colors"
+            >
+              Reset
+            </button>
+
+            <button
+              type="button"
+              onclick="signOut()"
+              class="px-2.5 py-1.5 rounded border border-red-900 bg-red-950/80 hover:bg-red-900 text-red-200 font-medium cursor-pointer transition-colors"
+            >
+              Sign Out
+            </button>
+
+          </div>
+        </div>
+
+        <!-- MAIN INSTITUTIONAL NAVIGATION BAR (Dashboard • Assignments • Submitted Assignments) -->
+        <div class="bg-slate-950/90 border-t border-slate-800 backdrop-blur-xs">
+          <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+            <nav class="flex items-center space-x-1 sm:space-x-2 py-1.5 overflow-x-auto text-xs">
+              
+              <!-- 1. Dashboard Tab -->
+              <button
+                id="nav-tab-dashboard"
+                type="button"
+                onclick="setActiveNavTab('dashboard')"
+                class="px-3.5 py-2 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 bg-blue-600 text-white shadow-xs"
+              >
+                <span>📊</span>
+                <span>Dashboard</span>
+              </button>
+
+              <!-- 2. Assignments Tab -->
+              <button
+                id="nav-tab-assignments"
+                type="button"
+                onclick="setActiveNavTab('assignments')"
+                class="px-3.5 py-2 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 text-slate-300 hover:text-white hover:bg-slate-800/80"
+              >
+                <span>📚</span>
+                <span>Assignments</span>
+                <span id="nav-count-assignments" class="text-[10px] px-1.5 py-0.5 rounded-full font-bold bg-slate-800 text-slate-300">
+                  16
+                </span>
+              </button>
+
+              <!-- 3. Submitted Assignments Tab -->
+              <button
+                id="nav-tab-submitted"
+                type="button"
+                onclick="setActiveNavTab('submitted')"
+                class="px-3.5 py-2 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 text-slate-300 hover:text-white hover:bg-slate-800/80"
+              >
+                <span>📄</span>
+                <span>Submitted Assignments</span>
+                <span id="nav-count-submitted" class="text-[10px] px-1.5 py-0.5 rounded-full font-bold bg-slate-800 text-slate-300">
+                  2
+                </span>
+                <span id="nav-pending-badge" class="hidden text-[10px] px-1 py-0.5 rounded bg-amber-400 text-slate-900 font-extrabold animate-pulse">
+                  1 Pending
+                </span>
+              </button>
+
+            </nav>
+
+            <div class="hidden md:flex items-center gap-2 text-[11px] text-slate-400">
+              <span>Current Role:</span>
+              <span id="nav-role-badge" class="font-bold px-2 py-0.5 rounded border bg-blue-950 text-blue-300 border-blue-800">
+                Student (241FA04008)
+              </span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Dashboard Canvas -->
+      <main class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-16">
+        
+        <!-- ==================== 1. DASHBOARD VIEW SECTION ==================== -->
+        <div id="view-dashboard" class="space-y-6">
+          
+          <!-- ACADEMIC HERO BANNER -->
+          <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-xs">
+          <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            
+            <div class="space-y-3 flex-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200">
+                  R22 C24 Regulation
+                </span>
+                <span id="hero-role-pill" class="px-2.5 py-0.5 rounded text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  Enrolled Student
+                </span>
+                <span id="hero-reg-pill" class="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-slate-100 text-slate-800 border border-slate-200">
+                  ID: 241FA04008
+                </span>
+                <span id="hero-email-pill" class="px-2.5 py-0.5 rounded text-xs font-mono text-slate-600 bg-slate-50 border border-slate-200">
+                  vu.241fa04008@vignan.ac.in
+                </span>
+              </div>
+
+              <div>
+                <h1 class="text-2xl font-bold text-slate-900 tracking-tight" id="hero-welcome-title">
+                  Welcome, Venkatesh Rao
+                </h1>
+                <p class="text-xs text-slate-600 font-medium mt-1">
+                  Department of Computer Science & Engineering • Vignan's Foundation for Science, Technology & Research
+                </p>
+              </div>
+
+              <!-- Academic Status (Faculty Advisor Removed as requested) -->
+              <div class="flex flex-wrap items-center gap-4 text-xs text-slate-600 pt-1">
+                <span>Academic Term: <strong class="text-slate-800">AY 2026-27 (Semester V)</strong></span>
+                <span>•</span>
+                <span id="hero-standing-text">Academic Standing: <strong class="text-emerald-700">Good Standing (CGPA: 8.82)</strong></span>
+                <span>•</span>
+                <span>Campus: <strong class="text-slate-800">Vadlamudi Main Campus</strong></span>
+              </div>
+            </div>
+
+            <!-- Professional Study Session Timer -->
+            <div class="bg-slate-50 rounded-lg p-4 border border-slate-200 min-w-[280px] sm:min-w-[310px] self-stretch lg:self-auto">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-600">
+                  Academic Session Timer
+                </span>
+                <div class="flex gap-1 text-[11px]">
+                  <button id="pomo-focus-btn" onclick="setPomoMode('focus')" class="px-2 py-0.5 rounded bg-blue-600 text-white font-semibold">25m Focus</button>
+                  <button id="pomo-break-btn" onclick="setPomoMode('break')" class="px-2 py-0.5 rounded bg-slate-200 text-slate-600 hover:bg-slate-300">5m Break</button>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between gap-4 mt-2">
+                <div>
+                  <div id="pomo-clock" class="text-3xl font-mono font-bold text-slate-900 tracking-tight">25:00</div>
+                  <div id="pomo-state-text" class="text-[11px] text-slate-500 mt-0.5">Ready to start</div>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                  <button id="btn-pomo-start" onclick="togglePomodoro()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-xs cursor-pointer">
+                    Start
+                  </button>
+                  <button onclick="resetPomodoro()" class="p-1.5 rounded-lg text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 cursor-pointer">
+                    Reset
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Academic KPI Cards -->
+        <div id="stats-container" class="bg-white rounded-xl border border-slate-200 p-5 shadow-xs"></div>
+
+        <!-- Dashboard Overview Widgets: Upcoming Deadlines & Recent Submissions -->
+        <div id="dashboard-widgets-container" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"></div>
+
+      </div>
+      <!-- END DASHBOARD VIEW SECTION -->
+
+      <!-- ==================== 2. ASSIGNMENTS VIEW SECTION ==================== -->
+      <div id="view-assignments" class="hidden space-y-6">
+        
+        <!-- Assignments Header Banner -->
+        <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+              <h2 class="text-base font-bold text-slate-900">
+                R22 C24 Coursework Assignments
+              </h2>
+            </div>
+            <p id="assignments-banner-desc" class="text-xs text-slate-500 mt-1">
+              View your enrolled subject assignments, track due dates, and submit solutions in PDF format
+            </p>
+          </div>
+          <div class="text-xs font-medium text-slate-500">
+            Total Coursework: <strong id="assignments-banner-count" class="text-slate-800 font-bold">16</strong>
+          </div>
+        </div>
+
+        <!-- MAIN 2-COLUMN GRID (Assignments & Filters) -->
+        <div id="coursework-grid" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          <!-- Left Column: Form (Restricted to Faculty; shows guidance to student) -->
+          <div class="lg:col-span-5 lg:sticky lg:top-18">
+            <div id="form-container"></div>
+          </div>
+
+          <!-- Right Column: Filters & Sections -->
+          <div class="lg:col-span-7">
+            <div id="filter-bar-container"></div>
+            <div id="sections-container" class="space-y-4"></div>
+          </div>
+
+        </div>
+
+      </div>
+      <!-- END ASSIGNMENTS VIEW SECTION -->
+
+      <!-- ==================== 3. SUBMITTED ASSIGNMENTS VIEW SECTION ==================== -->
+      <div id="view-submitted" class="hidden space-y-6">
+        <div id="submitted-view-container"></div>
+      </div>
+      <!-- END SUBMITTED ASSIGNMENTS VIEW SECTION -->
+
+      </main>
+    </div>
+
+    <!-- Institutional Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 px-6 text-center text-xs text-slate-500">
+      Vignan's Foundation for Science, Technology and Research (Deemed to be University) • R22 C24 Academic Regulation Portal
+    </footer>
+  </div>
+
+
+  <!-- ==================== STUDENT PDF SUBMISSION MODAL ==================== -->
+  <div id="submit-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+    <div class="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-lg overflow-hidden animate-in fade-in duration-200">
+      
+      <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="modal-course-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-600 text-white">
+              22CS202
+            </span>
+            <h3 class="text-sm font-bold tracking-tight">Submit Assignment (PDF Format)</h3>
+          </div>
+          <p id="modal-subject-label" class="text-xs text-slate-300 mt-0.5">Database Management Systems</p>
+        </div>
+        <button type="button" onclick="closeSubmitModal()" class="text-slate-400 hover:text-white text-xl font-bold p-1 cursor-pointer">
+          ×
+        </button>
+      </div>
+
+      <form id="pdf-submission-form" onsubmit="handlePdfSubmitForm(event)" class="p-6 space-y-4">
+        <input type="hidden" id="modal-assignment-id" value="">
+
+        <div class="bg-slate-50 rounded-lg p-3 border border-slate-200 text-xs space-y-1">
+          <div id="modal-assignment-title" class="font-bold text-slate-800">Title</div>
+          <div class="flex flex-wrap items-center gap-3 text-slate-500 pt-1">
+            <span>Student ID: <strong class="text-slate-700">241FA04008</strong></span>
+            <span>•</span>
+            <span>Regulation: <strong class="text-blue-700">R22 C24</strong></span>
+            <span>•</span>
+            <span>Max Score: <strong id="modal-max-marks" class="text-slate-700">20 Marks</strong></span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">
+            Upload PDF Document <span class="text-red-500">*</span>
+          </label>
+          <div class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-5 text-center transition-colors bg-slate-50/50">
+            <input type="file" id="modal-file-input" accept=".pdf,application/pdf" onchange="handleModalFileSelect(event)" class="hidden">
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 rounded-lg bg-red-100 text-red-600 flex items-center justify-center text-xl mb-2">
+                📄
+              </div>
+              <div id="modal-file-display" class="space-y-1">
+                <label for="modal-file-input" class="px-3.5 py-1.5 rounded-md bg-white border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-xs cursor-pointer inline-block">
+                  Browse PDF From Device
+                </label>
+                <p class="text-[11px] text-slate-500 mt-2">Strictly PDF format (.pdf) • Maximum file limit: 25 MB</p>
+                <button type="button" onclick="attachAutoGeneratedPdf()" class="mt-2 text-xs text-blue-700 hover:text-blue-900 font-semibold underline cursor-pointer">
+                  Or Attach Generated 241FA04008 PDF Solution
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">
+            Submission Remarks / Comments to Faculty <span class="text-slate-400 font-normal">(optional)</span>
+          </label>
+          <textarea
+            id="modal-remarks-input"
+            rows="2"
+            placeholder="e.g., Attached complete problem proofs and code traces as required by R22 C24 course instructions."
+            class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white focus:border-blue-600 resize-none"
+          ></textarea>
+        </div>
+
+        <div id="modal-upload-progress" class="hidden space-y-1">
+          <div class="flex justify-between text-xs font-semibold text-slate-700">
+            <span>Uploading PDF to Faculty Desk...</span>
+            <span id="modal-progress-percent">0%</span>
+          </div>
+          <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+            <div id="modal-progress-bar" class="bg-blue-600 h-full transition-all duration-200 rounded-full" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+          <button type="button" onclick="closeSubmitModal()" class="px-4 py-2 rounded-lg border border-slate-300 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer">
+            Cancel
+          </button>
+          <button type="submit" id="modal-submit-btn" class="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-xs font-bold text-white shadow-xs transition-colors cursor-pointer flex items-center gap-1.5">
+            Submit PDF to Faculty
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+
+  <!-- ==================== PDF DOCUMENT VIEWER MODAL ==================== -->
+  <div id="pdf-viewer-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/75 backdrop-blur-xs">
+    <div class="bg-slate-100 rounded-xl shadow-2xl border border-slate-300 w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in duration-200">
+      
+      <div class="bg-slate-900 text-white px-5 py-3 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded bg-red-600 text-white flex items-center justify-center font-bold text-sm">
+            PDF
+          </span>
+          <div>
+            <div id="viewer-filename" class="text-xs font-bold font-mono text-slate-100">filename.pdf</div>
+            <div id="viewer-subtext" class="text-[11px] text-slate-400">Submitted by 241FA04008</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="alert('Downloading student PDF submission archive...')" class="px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 rounded border border-slate-700 text-slate-200 cursor-pointer">
+            Download PDF
+          </button>
+          <button type="button" onclick="closePdfViewer()" class="text-slate-400 hover:text-white text-xl font-bold p-1 cursor-pointer">
+            ×
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6">
+        <div class="bg-white rounded-lg shadow-sm border border-slate-300 p-8 sm:p-10 max-w-2xl mx-auto space-y-6 text-slate-800">
+          
+          <div class="border-b-2 border-slate-900 pb-4 text-center">
+            <div class="text-sm font-bold tracking-wider text-slate-900 uppercase">
+              Vignan's Foundation for Science, Technology & Research
+            </div>
+            <div class="text-xs text-slate-600">
+              Department of Computer Science & Engineering • R22 C24 Regulation
+            </div>
+            <div class="text-base font-extrabold text-blue-900 mt-3 uppercase tracking-wide">
+              Coursework Submission Document
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 bg-slate-50 p-4 rounded-lg border border-slate-200 text-xs">
+            <div>
+              <span class="text-slate-500 font-medium">Student Name:</span>
+              <div id="viewer-student-name" class="font-bold text-slate-800">Venkatesh Rao</div>
+            </div>
+            <div>
+              <span class="text-slate-500 font-medium">University Reg No:</span>
+              <div id="viewer-student-id" class="font-bold text-blue-800 font-mono">241FA04008</div>
+            </div>
+            <div>
+              <span class="text-slate-500 font-medium">Student Email:</span>
+              <div id="viewer-student-email" class="font-mono text-slate-700">vu.241fa04008@vignan.ac.in</div>
+            </div>
+            <div>
+              <span class="text-slate-500 font-medium">Academic Regulation:</span>
+              <div class="font-bold text-slate-800">R22 C24 (B.Tech CSE)</div>
+            </div>
+            <div>
+              <span class="text-slate-500 font-medium">Course Code & Title:</span>
+              <div id="viewer-course-title" class="font-bold text-slate-800">22CS202 - DBMS</div>
+            </div>
+            <div>
+              <span class="text-slate-500 font-medium">Submission Timestamp:</span>
+              <div id="viewer-timestamp" class="font-medium text-slate-700">Nov 7, 2026</div>
+            </div>
+          </div>
+
+          <div class="space-y-4 text-xs leading-relaxed">
+            <div>
+              <h4 class="font-bold text-slate-900 uppercase text-[11px] tracking-wider text-blue-900 mb-1">
+                Assignment Title:
+              </h4>
+              <p id="viewer-asg-title" class="font-semibold text-slate-800 bg-blue-50/50 p-2.5 rounded border border-blue-100">
+                Title
+              </p>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-900 uppercase text-[11px] tracking-wider text-slate-700 mb-1">
+                1. Technical Implementation & Solution:
+              </h4>
+              <div class="bg-slate-900 text-slate-100 p-3.5 rounded-lg font-mono text-[11px] overflow-x-auto">
+                <code>// Vignan R22 C24 Module Verification
+// Registered Student: 241FA04008
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+typedef struct Node {
+    int keys[4];
+    struct Node* children[5];
+    int num_keys;
+    int is_leaf;
+} BTreeNode;
+
+void split_child(BTreeNode* parent, int index, BTreeNode* full_child) {
+    BTreeNode* sibling = (BTreeNode*)malloc(sizeof(BTreeNode));
+    sibling->is_leaf = full_child->is_leaf;
+    sibling->num_keys = 1;
+    // B+ Tree Node redistribution algorithm implementation...
+}</code>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-900 uppercase text-[11px] tracking-wider text-slate-700 mb-1">
+                2. Student Remarks:
+              </h4>
+              <p id="viewer-remarks" class="text-slate-600 bg-slate-50 p-3 rounded border border-slate-200 italic">
+                Remarks
+              </p>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500">
+            <span>Verified PDF Submission • SHA-256 Hash Verified</span>
+            <span class="font-mono text-emerald-700 font-bold">DIGITALLY SECURED</span>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="bg-white border-t border-slate-200 px-6 py-3 flex items-center justify-between text-xs text-slate-500 shrink-0">
+        <span>Viewing: 1 of 1 Document</span>
+        <button type="button" onclick="closePdfViewer()" class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-900 text-white font-semibold cursor-pointer">
+          Close Viewer
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 hidden bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-lg shadow-lg z-50"></div>
+
+  <script>
+    // --- R22 C24 REGULATION COURSES ---
+    const R22_C24_COURSES = [
+      { code: '22CS201', name: 'Data Structures & Algorithms' },
+      { code: '22CS202', name: 'Database Management Systems' },
+      { code: '22CS203', name: 'Object Oriented Programming through Java' },
+      { code: '22CS204', name: 'Computer Organization & Architecture' },
+      { code: '22CS301', name: 'Operating Systems' },
+      { code: '22CS302', name: 'Design and Analysis of Algorithms' },
+      { code: '22CS303', name: 'Computer Networks' },
+      { code: '22CS304', name: 'Formal Languages & Automata Theory (FLAT)' },
+      { code: '22CS305', name: 'Software Engineering & Agile Methodologies' },
+      { code: '22CS306', name: 'Artificial Intelligence & Machine Learning' },
+      { code: '22CS307', name: 'Web Technologies & Full Stack Development' },
+      { code: '22CS308', name: 'Cryptography & Network Security' },
+      { code: '22CS309', name: 'Cloud Computing & DevOps' },
+      { code: '22MA201', name: 'Probability, Statistics and Queuing Theory' },
+      { code: '22EC201', name: 'Digital Logic & Microprocessors' },
+      { code: '22HS201', name: 'Professional Communication & Soft Skills' }
+    ];
+
+    function getOffsetDate(days) {
+      const d = new Date();
+      d.setDate(d.getDate() + days);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function getDaysDiff(deadlineStr) {
+      if (!deadlineStr) return 0;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const [y, m, d] = deadlineStr.split('-').map(Number);
+      const target = new Date(y, m - 1, d);
+      target.setHours(0, 0, 0, 0);
+      return Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    }
+
+    function formatDate(str) {
+      if (!str) return '';
+      const [y, m, d] = str.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    // --- INITIAL DATA WITH R22 C24 COURSES ---
+    const DEFAULT_ASSIGNMENTS = [
+      {
+        id: 'asg-101',
+        title: 'Lab Exercise 4: B+ Tree Indexing & SQL Query Optimization',
+        courseCode: '22CS202',
+        subject: 'Database Management Systems',
+        facultyName: 'Dr. K. Srinivas',
+        deadline: getOffsetDate(-2),
+        priority: 'high',
+        maxMarks: 20,
+        description: 'Implement B+ Tree leaf node splitting and benchmark nested loop vs hash join operations on 50,000 records. Include execution plan screenshots and query cost comparison.'
+      },
+      {
+        id: 'asg-102',
+        title: 'Assignment 3: Dynamic Programming - Matrix Chain Multiplication & 0/1 Knapsack',
+        courseCode: '22CS302',
+        subject: 'Design and Analysis of Algorithms',
+        facultyName: 'Dr. P. V. Ramana',
+        deadline: getOffsetDate(0),
+        priority: 'high',
+        maxMarks: 15,
+        description: 'Provide step-by-step asymptotic complexity proofs and compare memoization (top-down) vs tabulation (bottom-up) runtime efficiency with graphs.'
+      },
+      {
+        id: 'asg-103',
+        title: 'Kernel Lab 2: Multi-threading & Semaphore Synchronization in Linux',
+        courseCode: '22CS301',
+        subject: 'Operating Systems',
+        facultyName: 'Prof. S. Lakshmi',
+        deadline: getOffsetDate(1),
+        priority: 'medium',
+        maxMarks: 20,
+        description: 'Solve the classical Dining Philosophers problem avoiding starvation and deadlocks using POSIX semaphores and pthread mutex locks in C.'
+      },
+      {
+        id: 'asg-104',
+        title: 'Full Stack Project Milestone: RESTful API & Authentication Architecture',
+        courseCode: '22CS307',
+        subject: 'Web Technologies & Full Stack Development',
+        facultyName: 'Dr. K. Srinivas',
+        deadline: getOffsetDate(4),
+        priority: 'medium',
+        maxMarks: 25,
+        description: 'Document your JWT auth middleware, schema validation, and Swagger/OpenAPI documentation. Attach architectural diagrams and endpoint test logs.'
+      },
+      {
+        id: 'asg-105',
+        title: 'Problem Set 5: Poisson Processes & M/M/1 Queuing Network Analysis',
+        courseCode: '22MA201',
+        subject: 'Probability, Statistics and Queuing Theory',
+        facultyName: 'Dr. M. Venkat',
+        deadline: getOffsetDate(7),
+        priority: 'low',
+        maxMarks: 10,
+        description: 'Solve textbook analytical problems 12.1 through 12.8 on steady state probabilities and mean wait time derivations.'
+      },
+      {
+        id: 'asg-106',
+        title: 'Lab 1: Red-Black Tree Height Verification & AVL Rotations',
+        courseCode: '22CS201',
+        subject: 'Data Structures & Algorithms',
+        facultyName: 'Prof. A. Rajesh',
+        deadline: getOffsetDate(-5),
+        priority: 'low',
+        maxMarks: 15,
+        description: 'Demonstrate balance factor re-computation after double left and right rotations with visual output traces.'
+      }
+    ];
+
+    const DEFAULT_SUBMISSIONS = [
+      {
+        id: 'sub-201',
+        assignmentId: 'asg-106',
+        studentId: '241FA04008',
+        studentName: 'Venkatesh Rao',
+        studentEmail: 'vu.241fa04008@vignan.ac.in',
+        courseCode: '22CS201',
+        courseName: 'Data Structures & Algorithms',
+        assignmentTitle: 'Lab 1: Red-Black Tree Height Verification & AVL Rotations',
+        fileName: '241FA04008_DSA_Lab1_AVL_Trees.pdf',
+        fileSize: '1.8 MB',
+        submittedAt: 'Nov 2, 2026, 02:22 PM',
+        studentRemarks: 'Attached complete implementation of AVL tree self-balancing rotations with screenshot test suite for all test cases.',
+        status: 'Graded',
+        marksAwarded: 14,
+        maxMarks: 15,
+        facultyFeedback: 'Excellent implementation. Code structure and rotation proofs are well documented.'
+      }
+    ];
+
+    // --- STATE ---
+    let currentUser = JSON.parse(localStorage.getItem('vignan_r22_user') || 'null') || {
+      role: 'student',
+      name: 'Venkatesh Rao',
+      regNumber: '241FA04008',
+      email: 'vu.241fa04008@vignan.ac.in',
+      department: 'Computer Science & Engineering',
+      regulation: 'R22 C24'
+    };
+
+    let state = {
+      assignments: JSON.parse(localStorage.getItem('vignan_r22_assignments') || 'null') || [...DEFAULT_ASSIGNMENTS],
+      submissions: JSON.parse(localStorage.getItem('vignan_r22_submissions') || 'null') || [...DEFAULT_SUBMISSIONS],
+      editingId: null,
+      activeNavTab: 'dashboard',
+      submittedFilterCourse: 'all',
+      submittedFilterStatus: 'all', // 'assignments' | 'submissions'
+      viewMode: 'timeline',
+      statusFilter: 'all',
+      searchQuery: '',
+      selectedCourse: 'all',
+      selectedPriority: 'all',
+      sortBy: 'deadline-asc'
+    };
+
+    let currentAuthRole = 'student';
+    let currentModalFile = null;
+
+    function saveState() {
+      localStorage.setItem('vignan_r22_user', JSON.stringify(currentUser));
+      localStorage.setItem('vignan_r22_assignments', JSON.stringify(state.assignments));
+      localStorage.setItem('vignan_r22_submissions', JSON.stringify(state.submissions));
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 2800);
+    }
+
+    // --- AUTH METHODS ---
+    function selectAuthRole(role) {
+      currentAuthRole = role;
+      const tabStudent = document.getElementById('role-tab-student');
+      const tabFaculty = document.getElementById('role-tab-faculty');
+      const studentFields = document.getElementById('student-auth-fields');
+      const facultyFields = document.getElementById('faculty-auth-fields');
+      const roleNotice = document.getElementById('role-notice');
+      const googleBtnText = document.getElementById('google-btn-text');
+
+      if (role === 'student') {
+        tabStudent.className = 'py-2.5 px-3 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-2 bg-blue-600 text-white shadow-xs cursor-pointer';
+        tabFaculty.className = 'py-2.5 px-3 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900 bg-transparent cursor-pointer';
+        studentFields.classList.remove('hidden');
+        facultyFields.classList.add('hidden');
+        roleNotice.className = 'p-3 rounded-lg border text-xs mb-5 font-medium bg-blue-50 border-blue-200 text-blue-900';
+        roleNotice.innerHTML = '<strong>Student Access:</strong> View assignments for R22 C24 courses & submit answers in PDF format.';
+        googleBtnText.textContent = 'Continue with Google (vu.241fa04008@vignan.ac.in)';
+      } else {
+        tabFaculty.className = 'py-2.5 px-3 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-2 bg-slate-900 text-white shadow-xs cursor-pointer';
+        tabStudent.className = 'py-2.5 px-3 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900 bg-transparent cursor-pointer';
+        studentFields.classList.add('hidden');
+        facultyFields.classList.remove('hidden');
+        roleNotice.className = 'p-3 rounded-lg border text-xs mb-5 font-medium bg-slate-100 border-slate-300 text-slate-900';
+        roleNotice.innerHTML = '<strong>Faculty Access:</strong> Create, edit assignments & review/grade PDF submissions from students.';
+        googleBtnText.textContent = 'Continue with Google (Faculty Account)';
+      }
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      if (currentAuthRole === 'student') {
+        loginStudentUser({
+          role: 'student',
+          name: 'Venkatesh Rao',
+          regNumber: document.getElementById('student-id-input').value.trim() || '241FA04008',
+          email: document.getElementById('student-email-input').value.trim() || 'vu.241fa04008@vignan.ac.in',
+          department: 'Computer Science & Engineering',
+          regulation: 'R22 C24'
+        });
+      } else {
+        loginFacultyUser({
+          role: 'faculty',
+          name: document.getElementById('faculty-name-input').value.trim() || 'Dr. K. Srinivas',
+          facultyId: document.getElementById('faculty-id-input').value.trim() || 'VU-FAC-102',
+          email: document.getElementById('faculty-email-input').value.trim() || 'dr.srinivas.cse@vignan.ac.in',
+          department: 'Computer Science & Engineering',
+          designation: 'Professor & Course Coordinator'
+        });
+      }
+    }
+
+    function loginWithGoogle() {
+      if (currentAuthRole === 'student') {
+        loginQuickStudent();
+      } else {
+        loginQuickFaculty();
+      }
+    }
+
+    function loginQuickStudent() {
+      loginStudentUser({
+        role: 'student',
+        name: 'Venkatesh Rao',
+        regNumber: '241FA04008',
+        email: 'vu.241fa04008@vignan.ac.in',
+        department: 'Computer Science & Engineering',
+        regulation: 'R22 C24'
+      });
+    }
+
+    function loginQuickFaculty() {
+      loginFacultyUser({
+        role: 'faculty',
+        name: 'Dr. K. Srinivas, Ph.D.',
+        facultyId: 'VU-FAC-102',
+        email: 'dr.srinivas.cse@vignan.ac.in',
+        department: 'Computer Science & Engineering',
+        designation: 'Professor & Course Coordinator'
+      });
+    }
+
+    function loginStudentUser(user) {
+      currentUser = user;
+      saveState();
+      syncAuthState();
+      showToast(`Signed in as Student: ${user.name} (${user.regNumber})`);
+    }
+
+    function loginFacultyUser(user) {
+      currentUser = user;
+      saveState();
+      syncAuthState();
+      showToast(`Signed in as Faculty: ${user.name} (${user.facultyId})`);
+    }
+
+    function toggleUserRole() {
+      if (currentUser?.role === 'student') {
+        loginFacultyUser({
+          role: 'faculty',
+          name: 'Dr. K. Srinivas, Ph.D.',
+          facultyId: 'VU-FAC-102',
+          email: 'dr.srinivas.cse@vignan.ac.in',
+          department: 'Computer Science & Engineering',
+          designation: 'Professor & Course Coordinator'
+        });
+      } else {
+        loginStudentUser({
+          role: 'student',
+          name: 'Venkatesh Rao',
+          regNumber: '241FA04008',
+          email: 'vu.241fa04008@vignan.ac.in',
+          department: 'Computer Science & Engineering',
+          regulation: 'R22 C24'
+        });
+      }
+    }
+
+    function signOut() {
+      if (confirm('Sign out of Vignan Student Assignment Portal?')) {
+        currentUser = null;
+        localStorage.removeItem('vignan_r22_user');
+        syncAuthState();
+        showToast('Signed out of session');
+      }
+    }
+
+    function syncAuthState() {
+      const authScreen = document.getElementById('auth-screen');
+      const mainWorkspace = document.getElementById('main-workspace');
+
+      if (!currentUser) {
+        authScreen.classList.remove('hidden');
+        mainWorkspace.classList.add('hidden');
+        return;
+      }
+
+      authScreen.classList.add('hidden');
+      mainWorkspace.classList.remove('hidden');
+
+      const isStudent = currentUser.role === 'student';
+
+      // Header updates
+      const nameEl = document.getElementById('user-display-name');
+      const regEl = document.getElementById('user-display-reg');
+      const avatarEl = document.getElementById('user-avatar-initial');
+      if (nameEl) nameEl.textContent = currentUser.name;
+      if (regEl) regEl.textContent = isStudent ? `(${currentUser.regNumber})` : `(${currentUser.facultyId})`;
+      if (avatarEl) avatarEl.textContent = currentUser.name.charAt(0);
+
+      // Hero banner updates
+      const welcomeEl = document.getElementById('hero-welcome-title');
+      const rolePillEl = document.getElementById('hero-role-pill');
+      const regPillEl = document.getElementById('hero-reg-pill');
+      const emailPillEl = document.getElementById('hero-email-pill');
+      const standingEl = document.getElementById('hero-standing-text');
+
+      if (welcomeEl) welcomeEl.textContent = `Welcome, ${currentUser.name}`;
+      if (rolePillEl) {
+        rolePillEl.textContent = isStudent ? 'Enrolled Student' : 'Authorized Faculty';
+        rolePillEl.className = isStudent ? 'px-2.5 py-0.5 rounded text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200' : 'px-2.5 py-0.5 rounded text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200';
+      }
+      if (regPillEl) regPillEl.textContent = isStudent ? `ID: ${currentUser.regNumber}` : `Faculty ID: ${currentUser.facultyId}`;
+      
+      if (emailPillEl) {
+        if (isStudent) {
+          emailPillEl.classList.remove('hidden');
+          emailPillEl.textContent = currentUser.email || 'vu.241fa04008@vignan.ac.in';
+        } else {
+          emailPillEl.classList.add('hidden');
+        }
+      }
+
+      if (standingEl) {
+        if (isStudent) {
+          standingEl.innerHTML = 'Academic Standing: <strong class="text-emerald-700">Good Standing (CGPA: 8.82)</strong>';
+        } else {
+          standingEl.innerHTML = 'Designation: <strong class="text-slate-800">Professor & Course Coordinator</strong>';
+        }
+      }
+
+      // Ensure correct view is shown
+      setActiveNavTab(state.activeNavTab || 'dashboard');
+    }
+
+    function setFacultyTab(tab) {
+      state.facultyTab = tab;
+      const tabAsg = document.getElementById('fac-tab-asg');
+      const tabSubs = document.getElementById('fac-tab-subs');
+
+      if (tab === 'assignments') {
+        tabAsg.className = 'flex-1 py-2.5 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-2 bg-slate-900 text-white shadow-xs';
+        tabSubs.className = 'flex-1 py-2.5 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900';
+      } else {
+        tabSubs.className = 'flex-1 py-2.5 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-2 bg-blue-600 text-white shadow-xs';
+        tabAsg.className = 'flex-1 py-2.5 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900';
+      }
+      renderApp();
+    }
+
+    // --- POMODORO TIMER ---
+    let pomoSeconds = 25 * 60;
+    let pomoIsRunning = false;
+    let pomoMode = 'focus';
+    let pomoInterval = null;
+
+    function setPomoMode(mode) {
+      pomoIsRunning = false;
+      clearInterval(pomoInterval);
+      pomoMode = mode;
+      pomoSeconds = mode === 'focus' ? 25 * 60 : 5 * 60;
+
+      document.getElementById('pomo-focus-btn').className = mode === 'focus' ? 'px-2 py-0.5 rounded bg-blue-600 text-white font-semibold' : 'px-2 py-0.5 rounded bg-slate-200 text-slate-600 hover:bg-slate-300';
+      document.getElementById('pomo-break-btn').className = mode === 'break' ? 'px-2 py-0.5 rounded bg-blue-600 text-white font-semibold' : 'px-2 py-0.5 rounded bg-slate-200 text-slate-600 hover:bg-slate-300';
+      document.getElementById('btn-pomo-start').textContent = 'Start';
+      document.getElementById('btn-pomo-start').className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-xs cursor-pointer';
+      document.getElementById('pomo-state-text').textContent = mode === 'focus' ? 'Ready for 25m focus' : 'Ready for 5m break';
+      updatePomoDisplay();
+    }
+
+    function togglePomodoro() {
+      pomoIsRunning = !pomoIsRunning;
+      const btn = document.getElementById('btn-pomo-start');
+      if (pomoIsRunning) {
+        btn.textContent = 'Pause';
+        btn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-amber-600 hover:bg-amber-700 shadow-xs cursor-pointer';
+        document.getElementById('pomo-state-text').textContent = pomoMode === 'focus' ? 'Active study session' : 'Scheduled break interval';
+        pomoInterval = setInterval(() => {
+          if (pomoSeconds > 0) {
+            pomoSeconds--;
+            updatePomoDisplay();
+          } else {
+            clearInterval(pomoInterval);
+            pomoIsRunning = false;
+            alert(pomoMode === 'focus' ? 'Study session completed. Take a scheduled 5-minute break.' : 'Break interval ended.');
+            setPomoMode(pomoMode === 'focus' ? 'break' : 'focus');
+          }
+        }, 1000);
+      } else {
+        clearInterval(pomoInterval);
+        btn.textContent = 'Resume';
+        btn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-xs cursor-pointer';
+        document.getElementById('pomo-state-text').textContent = 'Timer paused';
+      }
+    }
+
+    function resetPomodoro() {
+      setPomoMode(pomoMode);
+    }
+
+    function updatePomoDisplay() {
+      const m = String(Math.floor(pomoSeconds / 60)).padStart(2, '0');
+      const s = String(pomoSeconds % 60).padStart(2, '0');
+      document.getElementById('pomo-clock').textContent = `${m}:${s}`;
+    }
+
+    // --- STUDENT PDF SUBMISSION MODAL ---
+    function openSubmitModal(asgId) {
+      const asg = state.assignments.find((a) => a.id === asgId);
+      if (!asg) return;
+
+      document.getElementById('modal-assignment-id').value = asg.id;
+      document.getElementById('modal-course-badge').textContent = asg.courseCode;
+      document.getElementById('modal-subject-label').textContent = asg.subject;
+      document.getElementById('modal-assignment-title').textContent = asg.title;
+      document.getElementById('modal-max-marks').textContent = `${asg.maxMarks || 20} Marks`;
+      document.getElementById('modal-remarks-input').value = '';
+      document.getElementById('modal-upload-progress').classList.add('hidden');
+      document.getElementById('modal-progress-bar').style.width = '0%';
+
+      currentModalFile = null;
+      resetModalFileDisplay();
+
+      document.getElementById('submit-modal').classList.remove('hidden');
+    }
+
+    function closeSubmitModal() {
+      document.getElementById('submit-modal').classList.add('hidden');
+    }
+
+    function handleModalFileSelect(e) {
+      const file = e.target.files[0];
+      if (file) {
+        if (!file.name.toLowerCase().endsWith('.pdf')) {
+          alert('Only PDF files (.pdf) are permitted by Vignan University submission guidelines.');
+          return;
+        }
+        currentModalFile = file;
+        renderModalFileSelected(file.name, `${(file.size / (1024 * 1024)).toFixed(1)} MB`);
+      }
+    }
+
+    function attachAutoGeneratedPdf() {
+      const asgId = document.getElementById('modal-assignment-id').value;
+      const asg = state.assignments.find((a) => a.id === asgId);
+      const studentId = currentUser?.regNumber || '241FA04008';
+      const cleanTitle = (asg?.title || 'Assignment').slice(0, 15).replace(/[^a-zA-Z0-9]/g, '_');
+      const fileName = `${studentId}_${asg?.courseCode || '22CS202'}_${cleanTitle}.pdf`;
+
+      currentModalFile = {
+        name: fileName,
+        size: '2.4 MB'
+      };
+
+      renderModalFileSelected(fileName, '2.4 MB (Auto-Generated)');
+    }
+
+    function renderModalFileSelected(name, sizeStr) {
+      document.getElementById('modal-file-display').innerHTML = `
+        <div class="text-xs font-bold text-slate-800 flex items-center justify-center gap-1.5">
+          <span class="text-emerald-600 font-bold">✓ Attached:</span>
+          <span class="font-mono text-blue-900">${name}</span>
+        </div>
+        <div class="text-[11px] text-slate-500">File Size: ${sizeStr} • Verified PDF Document</div>
+        <button type="button" onclick="resetModalFileDisplay()" class="inline-block mt-2 text-xs font-semibold text-red-600 hover:underline cursor-pointer">
+          Remove / Change File
+        </button>
+      `;
+    }
+
+    function resetModalFileDisplay() {
+      currentModalFile = null;
+      document.getElementById('modal-file-display').innerHTML = `
+        <label for="modal-file-input" class="px-3.5 py-1.5 rounded-md bg-white border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-xs cursor-pointer inline-block">
+          Browse PDF From Device
+        </label>
+        <p class="text-[11px] text-slate-500 mt-2">Strictly PDF format (.pdf) • Maximum file limit: 25 MB</p>
+        <button type="button" onclick="attachAutoGeneratedPdf()" class="mt-2 text-xs text-blue-700 hover:text-blue-900 font-semibold underline cursor-pointer">
+          Or Attach Generated 241FA04008 PDF Solution
+        </button>
+      `;
+    }
+
+    function handlePdfSubmitForm(e) {
+      e.preventDefault();
+      if (!currentModalFile) {
+        alert('Please attach a PDF document before submitting.');
+        return;
+      }
+
+      const asgId = document.getElementById('modal-assignment-id').value;
+      const asg = state.assignments.find((a) => a.id === asgId);
+      const remarks = document.getElementById('modal-remarks-input').value.trim();
+
+      const progressDiv = document.getElementById('modal-upload-progress');
+      const progressBar = document.getElementById('modal-progress-bar');
+      const progressPercent = document.getElementById('modal-progress-percent');
+      const submitBtn = document.getElementById('modal-submit-btn');
+
+      progressDiv.classList.remove('hidden');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Uploading...';
+
+      let p = 15;
+      progressBar.style.width = p + '%';
+      progressPercent.textContent = p + '%';
+
+      const timer = setInterval(() => {
+        p += 25;
+        if (p >= 95) {
+          clearInterval(timer);
+          p = 100;
+        }
+        progressBar.style.width = p + '%';
+        progressPercent.textContent = p + '%';
+      }, 150);
+
+      setTimeout(() => {
+        clearInterval(timer);
+
+        const newSubmission = {
+          id: `sub-${Date.now()}`,
+          assignmentId: asg.id,
+          studentId: currentUser?.regNumber || '241FA04008',
+          studentName: currentUser?.name || 'Venkatesh Rao',
+          studentEmail: currentUser?.email || 'vu.241fa04008@vignan.ac.in',
+          courseCode: asg.courseCode,
+          courseName: asg.subject,
+          assignmentTitle: asg.title,
+          fileName: currentModalFile.name,
+          fileSize: currentModalFile.size || '2.4 MB',
+          submittedAt: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+          studentRemarks: remarks || 'PDF solution submitted as per R22 C24 coursework requirements.',
+          status: 'Pending Verification',
+          marksAwarded: null,
+          maxMarks: asg.maxMarks || 20,
+          facultyFeedback: ''
+        };
+
+        // Update submissions: replace existing if student already submitted this
+        state.submissions = [
+          newSubmission,
+          ...state.submissions.filter((s) => !(s.assignmentId === asg.id && s.studentId === newSubmission.studentId))
+        ];
+
+        saveState();
+        closeSubmitModal();
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit PDF to Faculty';
+
+        showToast('PDF assignment submitted! Dispatched to faculty review desk.');
+        renderApp();
+      }, 950);
+    }
+
+    // --- PDF VIEWER MODAL ---
+    function openPdfViewer(subId) {
+      const sub = state.submissions.find((s) => s.id === subId);
+      if (!sub) return;
+
+      document.getElementById('viewer-filename').textContent = sub.fileName;
+      document.getElementById('viewer-subtext').textContent = `Submitted by ${sub.studentName} (${sub.studentId}) • ${sub.fileSize}`;
+      document.getElementById('viewer-student-name').textContent = sub.studentName;
+      document.getElementById('viewer-student-id').textContent = sub.studentId;
+      document.getElementById('viewer-student-email').textContent = sub.studentEmail;
+      document.getElementById('viewer-course-title').textContent = `${sub.courseCode} - ${sub.courseName}`;
+      document.getElementById('viewer-timestamp').textContent = sub.submittedAt;
+      document.getElementById('viewer-asg-title').textContent = sub.assignmentTitle;
+      document.getElementById('viewer-remarks').textContent = `"${sub.studentRemarks || 'I confirm this is my original coursework.'}"`;
+
+      document.getElementById('pdf-viewer-modal').classList.remove('hidden');
+    }
+
+    function closePdfViewer() {
+      document.getElementById('pdf-viewer-modal').classList.add('hidden');
+    }
+
+    // --- FACULTY GRADING ---
+    function gradeSubmission(subId) {
+      const sub = state.submissions.find((s) => s.id === subId);
+      if (!sub) return;
+
+      const marksStr = prompt(`Award marks for ${sub.studentName} (${sub.studentId}) [Max: ${sub.maxMarks || 20}]:`, sub.marksAwarded !== null ? sub.marksAwarded : '18');
+      if (marksStr === null) return;
+
+      const marks = Number(marksStr);
+      if (isNaN(marks) || marks < 0 || marks > (sub.maxMarks || 20)) {
+        alert(`Invalid marks entered. Must be between 0 and ${sub.maxMarks || 20}.`);
+        return;
+      }
+
+      const feedback = prompt('Enter faculty feedback comments:', sub.facultyFeedback || 'Good solution structure and algorithmic proofs.');
+      if (feedback === null) return;
+
+      sub.marksAwarded = marks;
+      sub.facultyFeedback = feedback;
+      sub.status = 'Graded';
+
+      saveState();
+      showToast(`Marks (${marks}/${sub.maxMarks || 20}) and feedback recorded for ${sub.studentId}!`);
+      renderApp();
+    }
+
+    // --- FACULTY ASSIGNMENT CRUD ---
+    function handleFacultyCreateAsg(e) {
+      e.preventDefault();
+      if (currentUser?.role !== 'faculty') {
+        alert('Unauthorized: Only faculty members can author assignments.');
+        return;
+      }
+
+      const title = document.getElementById('field-title').value.trim();
+      const courseVal = document.getElementById('field-course').value;
+      const [courseCode, subject] = courseVal.split('|');
+      const deadline = document.getElementById('field-deadline').value;
+      const maxMarks = Number(document.getElementById('field-marks').value) || 20;
+      const priority = document.querySelector('input[name="priority"]:checked').value;
+      const description = document.getElementById('field-desc').value.trim();
+
+      if (!title) return;
+
+      if (state.editingId) {
+        const asg = state.assignments.find((a) => a.id === state.editingId);
+        if (asg) {
+          Object.assign(asg, { title, courseCode, subject, deadline, maxMarks, priority, description });
+        }
+        state.editingId = null;
+        showToast('Assignment record updated');
+      } else {
+        const newAsg = {
+          id: `asg-${Date.now()}`,
+          title,
+          courseCode,
+          subject,
+          facultyName: currentUser.name,
+          deadline,
+          maxMarks,
+          priority,
+          description
+        };
+        state.assignments.unshift(newAsg);
+        showToast('New assignment published to student portal');
+      }
+
+      saveState();
+      renderApp();
+    }
+
+    function startEditAsg(id) {
+      if (currentUser?.role !== 'faculty') return;
+      state.editingId = id;
+      renderApp();
+      window.scrollTo({ top: 380, behavior: 'smooth' });
+    }
+
+    function cancelEditAsg() {
+      state.editingId = null;
+      renderApp();
+    }
+
+    function deleteAsg(id) {
+      if (currentUser?.role !== 'faculty') return;
+      const asg = state.assignments.find((a) => a.id === id);
+      if (!asg) return;
+
+      if (confirm(`Delete assignment "${asg.title}"?`)) {
+        state.assignments = state.assignments.filter((a) => a.id !== id);
+        if (state.editingId === id) state.editingId = null;
+        saveState();
+        showToast('Assignment record deleted');
+        renderApp();
+      }
+    }
+
+    function resetDemoData() {
+      if (confirm('Reset all R22 C24 coursework and submission data to default university records?')) {
+        state.assignments = [...DEFAULT_ASSIGNMENTS];
+        state.submissions = [...DEFAULT_SUBMISSIONS];
+        state.editingId = null;
+        saveState();
+        showToast('Default R22 C24 data restored');
+        renderApp();
+      }
+    }
+
+    function setQuickDate(offset) {
+      document.getElementById('field-deadline').value = getOffsetDate(offset);
+    }
+
+    function switchView(mode) {
+      state.viewMode = mode;
+      renderApp();
+    }
+
+    function setStatusFilter(status) {
+      state.statusFilter = state.statusFilter === status ? 'all' : status;
+      renderApp();
+    }
+
+    // --- NAVIGATION BAR CONTROLLER ---
+    function setActiveNavTab(tab) {
+      state.activeNavTab = tab;
+      
+      const tabDash = document.getElementById('nav-tab-dashboard');
+      const tabAsg = document.getElementById('nav-tab-assignments');
+      const tabSub = document.getElementById('nav-tab-submitted');
+
+      const viewDash = document.getElementById('view-dashboard');
+      const viewAsg = document.getElementById('view-assignments');
+      const viewSub = document.getElementById('view-submitted');
+
+      // Update Tab Styles
+      const activeClass = 'px-3.5 py-2 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 bg-blue-600 text-white shadow-xs';
+      const inactiveClass = 'px-3.5 py-2 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 text-slate-300 hover:text-white hover:bg-slate-800/80';
+
+      tabDash.className = tab === 'dashboard' ? activeClass : inactiveClass;
+      tabAsg.className = tab === 'assignments' ? activeClass : inactiveClass;
+      tabSub.className = tab === 'submitted' ? activeClass : inactiveClass;
+
+      // Update Views Visibility
+      if (tab === 'dashboard') {
+        viewDash.classList.remove('hidden');
+        viewAsg.classList.add('hidden');
+        viewSub.classList.add('hidden');
+      } else if (tab === 'assignments') {
+        viewDash.classList.add('hidden');
+        viewAsg.classList.remove('hidden');
+        viewSub.classList.add('hidden');
+      } else {
+        viewDash.classList.add('hidden');
+        viewAsg.classList.add('hidden');
+        viewSub.classList.remove('hidden');
+      }
+
+      renderApp();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // --- MAIN RENDER FUNCTION ---
+    function renderApp() {
+      const isStudent = currentUser?.role === 'student';
+      const isFaculty = currentUser?.role === 'faculty';
+      const studentReg = currentUser?.regNumber || '241FA04008';
+
+      // Map submissions by assignment ID for the current student
+      const studentSubMap = {};
+      const allSubByAsg = {};
+
+      state.submissions.forEach((s) => {
+        if (!allSubByAsg[s.assignmentId]) allSubByAsg[s.assignmentId] = [];
+        allSubByAsg[s.assignmentId].push(s);
+
+        if (isStudent && s.studentId === studentReg) {
+          studentSubMap[s.assignmentId] = s;
+        }
+      });
+
+      const mySubmissions = state.submissions.filter((s) => s.studentId === studentReg);
+      const pendingSubmissionsCount = state.submissions.filter((s) => s.status === 'Pending Verification').length;
+
+      // Update Navigation Bar Counters & Badges
+      const countAsgEl = document.getElementById('nav-count-assignments');
+      const countSubEl = document.getElementById('nav-count-submitted');
+      const pendingBadgeEl = document.getElementById('nav-pending-badge');
+      const roleBadgeEl = document.getElementById('nav-role-badge');
+
+      if (countAsgEl) countAsgEl.textContent = state.assignments.length;
+      if (countSubEl) countSubEl.textContent = isStudent ? mySubmissions.length : state.submissions.length;
+      if (roleBadgeEl) roleBadgeEl.textContent = isStudent ? `Student (${studentReg})` : 'Faculty Coordinator';
+      
+      if (pendingBadgeEl) {
+        if (isFaculty && pendingSubmissionsCount > 0) {
+          pendingBadgeEl.classList.remove('hidden');
+          pendingBadgeEl.textContent = `${pendingSubmissionsCount} Pending`;
+        } else {
+          pendingBadgeEl.classList.add('hidden');
+        }
+      }
+
+      // ==========================================
+      // VIEW 1: DASHBOARD
+      // ==========================================
+      if (state.activeNavTab === 'dashboard') {
+        const total = state.assignments.length;
+        const statsEl = document.getElementById('stats-container');
+        const widgetsEl = document.getElementById('dashboard-widgets-container');
+
+        if (isFaculty) {
+          const totalSubs = state.submissions.length;
+          const gradedSubs = state.submissions.filter((s) => s.status === 'Graded').length;
+
+          statsEl.innerHTML = `
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Faculty Coursework & Submissions Overview • R22 C24 Regulation
+                </span>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">
+                  ${total} Published Tasks
+                </span>
+              </div>
+              <span class="text-xs font-bold text-blue-700">
+                ${gradedSubs} of ${totalSubs} Submissions Graded
+              </span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="p-3.5 rounded-lg border border-slate-200 bg-white">
+                <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Published Coursework</div>
+                <div class="text-2xl font-bold text-slate-900 mt-1">${total}</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">R22 C24 Syllabus</div>
+              </div>
+              <div class="p-3.5 rounded-lg border border-blue-200 bg-blue-50/40">
+                <div class="text-[11px] font-bold text-blue-700 uppercase tracking-wider">PDFs Received</div>
+                <div class="text-2xl font-bold text-blue-700 mt-1">${totalSubs}</div>
+                <div class="text-[11px] text-slate-500 mt-0.5">Reached faculty desk</div>
+              </div>
+              <div class="p-3.5 rounded-lg border border-amber-200 bg-amber-50/40">
+                <div class="text-[11px] font-bold text-amber-800 uppercase tracking-wider flex items-center justify-between">
+                  <span>Awaiting Review</span>
+                  ${pendingSubmissionsCount > 0 ? '<span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>' : ''}
+                </div>
+                <div class="text-2xl font-bold text-amber-800 mt-1">${pendingSubmissionsCount}</div>
+                <div class="text-[11px] text-slate-500 mt-0.5">Needs evaluation</div>
+              </div>
+              <div class="p-3.5 rounded-lg border border-emerald-200 bg-emerald-50/40">
+                <div class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">Evaluated & Recorded</div>
+                <div class="text-2xl font-bold text-emerald-800 mt-1">${gradedSubs}</div>
+                <div class="text-[11px] text-slate-500 mt-0.5">Marks verified</div>
+              </div>
+            </div>
+          `;
+        } else {
+          const completed = state.assignments.filter((a) => !!studentSubMap[a.id]).length;
+          const pending = total - completed;
+          const overdue = state.assignments.filter((a) => !studentSubMap[a.id] && getDaysDiff(a.deadline) < 0).length;
+          const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+
+          statsEl.innerHTML = `
+            <div class="mb-5">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Semester PDF Submission Completion Rate (R22 C24)
+                  </span>
+                  <span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
+                    ${completed} of ${total} Submitted
+                  </span>
+                </div>
+                <span class="text-sm font-bold text-slate-900">${percent}%</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                <div class="h-full bg-blue-600 rounded-full transition-all duration-500 ease-out" style="width: ${percent}%"></div>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="p-3.5 text-left rounded-lg border border-slate-200 bg-white">
+                <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Total Coursework</div>
+                <div class="text-2xl font-bold text-slate-900 mt-1">${total}</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">Enrolled R22 modules</div>
+              </div>
+              <div class="p-3.5 text-left rounded-lg border border-blue-200 bg-blue-50/40">
+                <div class="text-[11px] font-bold text-blue-700 uppercase tracking-wider">Pending PDF Uploads</div>
+                <div class="text-2xl font-bold text-blue-700 mt-1">${pending}</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">Requires submission</div>
+              </div>
+              <div class="p-3.5 text-left rounded-lg border border-red-200 bg-red-50/40">
+                <div class="flex items-center justify-between text-[11px] font-bold text-red-600 uppercase tracking-wider">
+                  <span>Overdue Tasks</span>
+                  ${overdue > 0 ? '<span class="w-2 h-2 rounded-full bg-red-600"></span>' : ''}
+                </div>
+                <div class="text-2xl font-bold text-red-600 mt-1">${overdue}</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">${overdue > 0 ? 'Urgent attention' : 'Zero late submissions'}</div>
+              </div>
+              <div class="p-3.5 text-left rounded-lg border border-emerald-200 bg-emerald-50/40">
+                <div class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Submitted in PDF</div>
+                <div class="text-2xl font-bold text-emerald-700 mt-1">${completed}</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">Reached faculty desk</div>
+              </div>
+            </div>
+          `;
+        }
+
+        // Dashboard Overview 2-Column Widgets
+        const upcomingTasks = state.assignments.slice(0, 3);
+        widgetsEl.innerHTML = `
+          <!-- Upcoming Deadlines -->
+          <div class="lg:col-span-7 bg-white rounded-xl border border-slate-200 p-5 shadow-xs">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="text-base">⏰</span>
+                <h2 class="text-sm font-bold text-slate-900">Upcoming Coursework Deadlines</h2>
+              </div>
+              <button
+                type="button"
+                onclick="setActiveNavTab('assignments')"
+                class="text-xs font-bold text-blue-600 hover:text-blue-800 underline cursor-pointer"
+              >
+                View All in Assignments →
+              </button>
+            </div>
+            <div class="space-y-3">
+              ${upcomingTasks.map((asg) => {
+                const sub = studentSubMap[asg.id];
+                const rel = getRelativeBadge(asg.deadline);
+                return `
+                  <div class="p-3.5 rounded-lg border border-slate-100 bg-slate-50/70 hover:bg-slate-50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="space-y-1">
+                      <div class="flex items-center gap-2">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800 font-mono">${asg.courseCode}</span>
+                        <span class="text-xs font-bold text-slate-800">${asg.title}</span>
+                      </div>
+                      <div class="text-[11px] text-slate-500">
+                        Deadline: <strong class="text-slate-700">${formatAcademicDate(asg.deadline)}</strong> (${rel.label})
+                      </div>
+                    </div>
+                    <div>
+                      ${isStudent ? `
+                        ${sub ? `
+                          <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200">
+                            ✓ Submitted in PDF
+                          </span>
+                        ` : `
+                          <button
+                            type="button"
+                            onclick="openSubmitModal('${asg.id}')"
+                            class="text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-lg shadow-xs transition-colors cursor-pointer"
+                          >
+                            Submit PDF
+                          </button>
+                        `}
+                      ` : `
+                        <button
+                          type="button"
+                          onclick="setActiveNavTab('assignments'); startEditAsg('${asg.id}');"
+                          class="text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 px-2.5 py-1 rounded shadow-xs cursor-pointer"
+                        >
+                          Edit Task
+                        </button>
+                      `}
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          <!-- Submissions Quick View -->
+          <div class="lg:col-span-5 bg-white rounded-xl border border-slate-200 p-5 shadow-xs">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="text-base">${isStudent ? '📄' : '📥'}</span>
+                <h2 class="text-sm font-bold text-slate-900">${isStudent ? 'My Submissions Status' : 'Submissions Review Desk'}</h2>
+              </div>
+              <button
+                type="button"
+                onclick="setActiveNavTab('submitted')"
+                class="text-xs font-bold text-blue-600 hover:text-blue-800 underline cursor-pointer"
+              >
+                View All →
+              </button>
+            </div>
+
+            ${isStudent ? `
+              <div class="space-y-3">
+                ${mySubmissions.length === 0 ? `
+                  <div class="text-center py-8 text-xs text-slate-500">
+                    No submissions uploaded yet. Choose an assignment to submit in PDF.
+                  </div>
+                ` : `
+                  ${mySubmissions.slice(0, 3).map((sub) => `
+                    <div class="p-3 rounded-lg border border-slate-100 bg-slate-50 flex items-center justify-between gap-2">
+                      <div class="space-y-0.5">
+                        <div class="text-xs font-bold text-slate-800 line-clamp-1">${sub.assignmentTitle}</div>
+                        <div class="text-[11px] font-mono text-slate-500">${sub.fileName}</div>
+                      </div>
+                      <div>
+                        ${sub.status === 'Graded' ? `
+                          <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                            ${sub.marksAwarded} / ${sub.maxMarks || 20} Marks
+                          </span>
+                        ` : `
+                          <span class="text-xs font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                            In Review
+                          </span>
+                        `}
+                      </div>
+                    </div>
+                  `).join('')}
+                `}
+                <button
+                  type="button"
+                  onclick="setActiveNavTab('submitted')"
+                  class="w-full mt-3 py-2 px-3 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors cursor-pointer text-center block"
+                >
+                  Open Submitted Assignments Tab
+                </button>
+              </div>
+            ` : `
+              <div class="space-y-3">
+                <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200 text-xs">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="font-semibold text-slate-600">Total Student PDFs:</span>
+                    <span class="font-bold text-slate-900">${state.submissions.length}</span>
+                  </div>
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="font-semibold text-slate-600">Awaiting Evaluation:</span>
+                    <span class="font-bold text-amber-700">${pendingSubmissionsCount}</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="font-semibold text-slate-600">Evaluated & Recorded:</span>
+                    <span class="font-bold text-emerald-700">${state.submissions.length - pendingSubmissionsCount}</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onclick="setActiveNavTab('submitted')"
+                  class="w-full py-2 px-3 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer text-center block"
+                >
+                  Inspect & Grade Submissions Inbox
+                </button>
+              </div>
+            `}
+          </div>
+        `;
+      }
+
+      // ==========================================
+      // VIEW 2: ASSIGNMENTS
+      // ==========================================
+      if (state.activeNavTab === 'assignments') {
+        const descEl = document.getElementById('assignments-banner-desc');
+        const countEl = document.getElementById('assignments-banner-count');
+        if (descEl) {
+          descEl.textContent = isFaculty
+            ? 'Author, edit, and organize official semester assignments for Computer Science courses'
+            : 'View your enrolled subject assignments, track due dates, and submit solutions in PDF format';
+        }
+        if (countEl) countEl.textContent = state.assignments.length;
+
+        // Render Left Column Form
+        const formContainer = document.getElementById('form-container');
+        if (isFaculty) {
+          const editingAsg = state.editingId ? state.assignments.find((a) => a.id === state.editingId) : null;
+          formContainer.innerHTML = `
+            <div class="bg-white rounded-xl border border-slate-200 shadow-xs p-5">
+              <div class="flex items-center justify-between pb-3.5 mb-4 border-b border-slate-100">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                    <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wide">
+                      ${editingAsg ? 'Edit Assignment Record' : 'Faculty Coursework Authoring'}
+                    </h2>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-0.5">Publish an official R22 C24 regulation task for students</p>
+                </div>
+                ${editingAsg ? `
+                  <button type="button" onclick="cancelEditAsg()" class="text-xs px-2.5 py-1 text-slate-600 bg-slate-100 hover:bg-slate-200 rounded font-medium">Cancel</button>
+                ` : ''}
+              </div>
+
+              <form onsubmit="handleFacultyCreateAsg(event)" class="space-y-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">
+                    Assignment Title <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="field-title"
+                    required
+                    value="${editingAsg ? editingAsg.title : ''}"
+                    placeholder="e.g., Lab Exercise 5: Transaction Concurrency & ACID"
+                    class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white focus:border-blue-600"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">
+                    Course Module (R22 C24 Regulation) <span class="text-red-500">*</span>
+                  </label>
+                  <select id="field-course" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white font-medium">
+                    ${R22_C24_COURSES.map((c) => `
+                      <option value="${c.code}|${c.name}" ${editingAsg && editingAsg.courseCode === c.code ? 'selected' : ''}>
+                        ${c.code} — ${c.name}
+                      </option>
+                    `).join('')}
+                  </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">
+                      Due Date <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      id="field-deadline"
+                      required
+                      value="${editingAsg ? editingAsg.deadline : getOffsetDate(7)}"
+                      class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">
+                      Max Marks <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      id="field-marks"
+                      required
+                      min="5"
+                      max="100"
+                      value="${editingAsg ? (editingAsg.maxMarks || 20) : 20}"
+                      class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Priority</label>
+                  <div class="flex gap-4 text-xs">
+                    <label class="flex items-center gap-1.5 cursor-pointer">
+                      <input type="radio" name="priority" value="high" ${editingAsg && editingAsg.priority === 'high' ? 'checked' : ''} />
+                      <span class="text-red-700 font-medium">High</span>
+                    </label>
+                    <label class="flex items-center gap-1.5 cursor-pointer">
+                      <input type="radio" name="priority" value="medium" ${!editingAsg || editingAsg.priority === 'medium' ? 'checked' : ''} />
+                      <span class="text-amber-700 font-medium">Medium</span>
+                    </label>
+                    <label class="flex items-center gap-1.5 cursor-pointer">
+                      <input type="radio" name="priority" value="low" ${editingAsg && editingAsg.priority === 'low' ? 'checked' : ''} />
+                      <span class="text-emerald-700 font-medium">Low</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Instructions / Description</label>
+                  <textarea
+                    id="field-desc"
+                    rows="3"
+                    placeholder="Provide coursework guidelines, PDF formatting instructions, and submission rubrics..."
+                    class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white"
+                  >${editingAsg ? (editingAsg.description || '') : ''}</textarea>
+                </div>
+
+                <button
+                  type="submit"
+                  class="w-full py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-lg shadow-xs transition-colors cursor-pointer"
+                >
+                  ${editingAsg ? 'Update Coursework Assignment' : 'Publish Assignment to Students'}
+                </button>
+              </form>
+            </div>
+          `;
+        } else {
+          formContainer.innerHTML = `
+            <div class="bg-white rounded-xl border border-slate-200 shadow-xs p-5 space-y-4">
+              <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                <h3 class="text-sm font-bold text-slate-900">Student Coursework Instructions</h3>
+              </div>
+              <div class="p-3.5 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 space-y-2">
+                <div class="font-bold flex items-center gap-1.5">
+                  <span>ℹ️</span>
+                  <span>Institutional Submission Policy</span>
+                </div>
+                <p class="leading-relaxed">
+                  Only authorized faculty coordinators (Dr. K. Srinivas) author semester assignments. As an enrolled student (<strong>${studentReg}</strong>), your responsibility is to submit coursework strictly in <strong>PDF format (.pdf)</strong>.
+                </p>
+              </div>
+              <div class="space-y-2 text-xs text-slate-600">
+                <div class="flex items-start gap-2">
+                  <span class="font-bold text-blue-600">1.</span>
+                  <span>Browse the assignment list on the right and check due dates.</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="font-bold text-blue-600">2.</span>
+                  <span>Click <strong>Submit PDF Assignment</strong> on any pending task.</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="font-bold text-blue-600">3.</span>
+                  <span>Once submitted, track your grades & faculty remarks in the <strong>Submitted Assignments</strong> tab.</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // Render Filter Bar
+        const filterContainer = document.getElementById('filter-bar-container');
+        filterContainer.innerHTML = `
+          <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-xs space-y-3">
+            <div class="flex flex-col sm:flex-row gap-2">
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Search assignments by title, course code, or keyword..."
+                value="${state.searchQuery}"
+                oninput="state.searchQuery = this.value; renderApp();"
+                class="flex-1 px-3 py-2 text-xs rounded-lg border border-slate-300 focus:border-blue-600"
+              />
+              <select
+                onchange="state.selectedCourse = this.value; renderApp();"
+                class="px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white font-medium"
+              >
+                <option value="all">All Courses</option>
+                ${R22_C24_COURSES.map((c) => `
+                  <option value="${c.code}" ${state.selectedCourse === c.code ? 'selected' : ''}>${c.code} - ${c.name}</option>
+                `).join('')}
+              </select>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-2 text-xs pt-1 border-t border-slate-100">
+              <div class="flex items-center gap-2">
+                <span class="text-slate-500 font-semibold">Priority:</span>
+                <select
+                  onchange="state.selectedPriority = this.value; renderApp();"
+                  class="px-2 py-1 text-xs rounded border border-slate-300 bg-white"
+                >
+                  <option value="all">All Priorities</option>
+                  <option value="high" ${state.selectedPriority === 'high' ? 'selected' : ''}>High Priority</option>
+                  <option value="medium" ${state.selectedPriority === 'medium' ? 'selected' : ''}>Medium Priority</option>
+                  <option value="low" ${state.selectedPriority === 'low' ? 'selected' : ''}>Low Priority</option>
+                </select>
+              </div>
+              <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+                <button
+                  type="button"
+                  onclick="switchView('timeline')"
+                  class="px-2.5 py-1 rounded text-xs font-bold transition-all ${state.viewMode === 'timeline' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500'}"
+                >
+                  Timeline
+                </button>
+                <button
+                  type="button"
+                  onclick="switchView('by-subject')"
+                  class="px-2.5 py-1 rounded text-xs font-bold transition-all ${state.viewMode === 'by-subject' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500'}"
+                >
+                  By Course
+                </button>
+                <button
+                  type="button"
+                  onclick="switchView('by-priority')"
+                  class="px-2.5 py-1 rounded text-xs font-bold transition-all ${state.viewMode === 'by-priority' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500'}"
+                >
+                  By Priority
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Filter and organize assignments list
+        let filtered = state.assignments.filter((a) => {
+          if (state.searchQuery.trim()) {
+            const q = state.searchQuery.toLowerCase();
+            const matchTitle = a.title.toLowerCase().includes(q);
+            const matchSub = (a.subject || '').toLowerCase().includes(q);
+            const matchCode = (a.courseCode || '').toLowerCase().includes(q);
+            if (!matchTitle && !matchSub && !matchCode) return false;
+          }
+          if (state.selectedCourse !== 'all' && a.courseCode !== state.selectedCourse) return false;
+          if (state.selectedPriority !== 'all' && a.priority !== state.selectedPriority) return false;
+          if (isStudent && state.statusFilter === 'pending' && studentSubMap[a.id]) return false;
+          if (isStudent && state.statusFilter === 'completed' && !studentSubMap[a.id]) return false;
+          return true;
+        });
+
+        const sectionsContainer = document.getElementById('sections-container');
+        if (filtered.length === 0) {
+          sectionsContainer.innerHTML = `
+            <div class="bg-white rounded-xl border border-dashed border-slate-300 p-12 text-center">
+              <div class="text-3xl mb-2">🔍</div>
+              <h3 class="text-sm font-bold text-slate-800">No Assignments Found</h3>
+              <p class="text-xs text-slate-500 mt-1">Try adjusting your filters or search terms.</p>
+            </div>
+          `;
+        } else {
+          sectionsContainer.innerHTML = filtered.map((asg) => {
+            const sub = studentSubMap[asg.id];
+            const rel = getRelativeBadge(asg.deadline);
+            const priorityBadge = asg.priority === 'high' ? 'bg-red-50 text-red-700 border-red-200' : asg.priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200';
+
+            return `
+              <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-xs hover:border-slate-300 transition-all">
+                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                  <div class="space-y-1.5 flex-1">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <span class="px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800 font-mono">${asg.courseCode}</span>
+                      <span class="text-xs font-semibold text-slate-700">${asg.subject}</span>
+                      <span class="text-slate-300">•</span>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold border uppercase ${priorityBadge}">${asg.priority}</span>
+                      <span class="text-slate-300">•</span>
+                      <span class="text-xs font-semibold text-slate-500">Max: ${asg.maxMarks || 20} Marks</span>
+                    </div>
+
+                    <h3 class="text-base font-bold text-slate-900 pt-1">${asg.title}</h3>
+                    <p class="text-xs text-slate-600">${asg.description || 'Complete solution required in formal university PDF format.'}</p>
+
+                    <div class="flex flex-wrap items-center gap-3 pt-2 text-xs">
+                      <span class="text-slate-500">
+                        Due: <strong class="text-slate-700">${formatAcademicDate(asg.deadline)}</strong>
+                      </span>
+                      <span class="px-2 py-0.5 rounded text-[11px] font-semibold border ${rel.badge}">${rel.label}</span>
+                    </div>
+
+                    ${sub ? `
+                      <div class="mt-3 p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <div class="flex items-center gap-2">
+                          <span class="text-emerald-700 font-bold">✓ PDF Submitted:</span>
+                          <span class="font-mono text-emerald-900 font-semibold">${sub.fileName}</span>
+                          <span class="text-slate-500 text-[11px]">(${sub.fileSize || '1.4 MB'})</span>
+                        </div>
+                        <button
+                          type="button"
+                          onclick="openPdfViewer('${sub.id}')"
+                          class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-emerald-300 text-emerald-800 rounded font-semibold text-xs cursor-pointer shadow-xs"
+                        >
+                          View PDF
+                        </button>
+                      </div>
+                    ` : ''}
+                  </div>
+
+                  <div class="flex sm:flex-col items-center gap-2 shrink-0 pt-2 sm:pt-0">
+                    ${isStudent ? `
+                      ${sub ? `
+                        <span class="text-xs font-bold px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-300">
+                          ${sub.status === 'Graded' ? `Marks: ${sub.marksAwarded}/${sub.maxMarks || 20}` : 'Awaiting Review'}
+                        </span>
+                      ` : `
+                        <button
+                          type="button"
+                          onclick="openSubmitModal('${asg.id}')"
+                          class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg shadow-xs transition-colors cursor-pointer flex items-center gap-1.5"
+                        >
+                          <span>📄</span>
+                          <span>Submit PDF</span>
+                        </button>
+                      `}
+                    ` : `
+                      <button
+                        type="button"
+                        onclick="startEditAsg('${asg.id}')"
+                        class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs rounded-lg border border-slate-300 cursor-pointer"
+                      >
+                        Edit Task
+                      </button>
+                      <button
+                        type="button"
+                        onclick="deleteAsg('${asg.id}')"
+                        class="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 font-semibold text-xs rounded-lg border border-red-200 cursor-pointer"
+                      >
+                        Delete
+                      </button>
+                    `}
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      // ==========================================
+      // VIEW 3: SUBMITTED ASSIGNMENTS
+      // ==========================================
+      if (state.activeNavTab === 'submitted') {
+        const subContainer = document.getElementById('submitted-view-container');
+
+        if (isStudent) {
+          const totalSub = mySubmissions.length;
+          const gradedSub = mySubmissions.filter((s) => s.status === 'Graded').length;
+          const pendingSub = totalSub - gradedSub;
+          
+          const totalMarksAwarded = mySubmissions
+            .filter((s) => s.status === 'Graded' && typeof s.marksAwarded === 'number')
+            .reduce((acc, c) => acc + c.marksAwarded, 0);
+
+          const totalMaxMarks = mySubmissions
+            .filter((s) => s.status === 'Graded' && typeof s.marksAwarded === 'number')
+            .reduce((acc, c) => acc + (c.maxMarks || 20), 0);
+
+          const avgPct = totalMaxMarks > 0 ? Math.round((totalMarksAwarded / totalMaxMarks) * 100) : 0;
+
+          // Filter student submissions
+          const filteredStudentSubs = mySubmissions.filter((sub) => {
+            if (state.submittedFilterCourse !== 'all' && sub.courseCode !== state.submittedFilterCourse) return false;
+            if (state.submittedFilterStatus === 'graded' && sub.status !== 'Graded') return false;
+            if (state.submittedFilterStatus === 'pending' && sub.status === 'Graded') return false;
+            return true;
+          });
+
+          subContainer.innerHTML = `
+            <!-- Top Banner -->
+            <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-xs">
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <h1 class="text-lg font-bold text-slate-900 tracking-tight">
+                      My Submitted Assignments (PDF Repository)
+                    </h1>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-1">
+                    Official archive of coursework submitted in PDF format for faculty review • Student ID: <strong class="font-mono text-slate-800">${studentReg}</strong>
+                  </p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 text-xs">
+                  <span class="px-3 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 font-bold font-mono">
+                    ${currentUser?.email || 'vu.241fa04008@vignan.ac.in'}
+                  </span>
+                  <button
+                    type="button"
+                    onclick="setActiveNavTab('assignments')"
+                    class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-xs transition-colors cursor-pointer flex items-center gap-1.5"
+                  >
+                    <span>+</span>
+                    <span>Submit New Assignment</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Stats Row -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-slate-100">
+                <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+                  <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Submitted</div>
+                  <div class="text-2xl font-extrabold text-slate-900 mt-1">${totalSub} <span class="text-xs font-normal text-slate-500">PDFs</span></div>
+                </div>
+                <div class="bg-emerald-50 p-3.5 rounded-lg border border-emerald-200">
+                  <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Verified & Graded</div>
+                  <div class="text-2xl font-extrabold text-emerald-800 mt-1">${gradedSub} <span class="text-xs font-normal text-emerald-600">tasks</span></div>
+                </div>
+                <div class="bg-amber-50 p-3.5 rounded-lg border border-amber-200">
+                  <div class="text-[11px] font-bold uppercase tracking-wider text-amber-700">Awaiting Faculty</div>
+                  <div class="text-2xl font-extrabold text-amber-800 mt-1">${pendingSub} <span class="text-xs font-normal text-amber-600">in review</span></div>
+                </div>
+                <div class="bg-blue-50 p-3.5 rounded-lg border border-blue-200">
+                  <div class="text-[11px] font-bold uppercase tracking-wider text-blue-700">Average Performance</div>
+                  <div class="text-2xl font-extrabold text-blue-900 mt-1">
+                    ${totalMaxMarks > 0 ? `${avgPct}%` : 'N/A'}
+                    ${totalMaxMarks > 0 ? `<span class="text-xs font-normal text-blue-600 ml-1.5">(${totalMarksAwarded}/${totalMaxMarks})</span>` : ''}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                <div class="flex items-center gap-2 text-xs">
+                  <label class="font-semibold text-slate-600">Course:</label>
+                  <select
+                    onchange="state.submittedFilterCourse = this.value; renderApp();"
+                    class="px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 bg-white font-medium"
+                  >
+                    <option value="all">All R22 C24 Courses</option>
+                    ${R22_C24_COURSES.map((c) => `
+                      <option value="${c.code}" ${state.submittedFilterCourse === c.code ? 'selected' : ''}>${c.code} — ${c.name}</option>
+                    `).join('')}
+                  </select>
+                </div>
+                <div class="flex items-center gap-2 text-xs">
+                  <label class="font-semibold text-slate-600">Status:</label>
+                  <select
+                    onchange="state.submittedFilterStatus = this.value; renderApp();"
+                    class="px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 bg-white font-medium"
+                  >
+                    <option value="all">All Submissions</option>
+                    <option value="graded" ${state.submittedFilterStatus === 'graded' ? 'selected' : ''}>Graded & Evaluated</option>
+                    <option value="pending" ${state.submittedFilterStatus === 'pending' ? 'selected' : ''}>Awaiting Review</option>
+                  </select>
+                </div>
+              </div>
+              <div class="text-xs text-slate-500 font-medium">
+                Showing <strong>${filteredStudentSubs.length}</strong> of ${totalSub} submission records
+              </div>
+            </div>
+
+            <!-- List -->
+            ${filteredStudentSubs.length === 0 ? `
+              <div class="bg-white rounded-xl border border-dashed border-slate-300 p-12 text-center shadow-xs">
+                <div class="w-14 h-14 mx-auto rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-2xl text-blue-600 mb-3">📄</div>
+                <h3 class="text-sm font-bold text-slate-800">No Submissions Found</h3>
+                <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1 mb-4">
+                  ${totalSub === 0 ? 'You have not submitted any assignments in PDF format yet. Visit the Assignments tab to submit your coursework.' : 'No submissions match your selected filter criteria.'}
+                </p>
+                <button
+                  type="button"
+                  onclick="setActiveNavTab('assignments')"
+                  class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer"
+                >
+                  Go to Assignments
+                </button>
+              </div>
+            ` : `
+              <div class="space-y-4">
+                ${filteredStudentSubs.map((sub) => {
+                  const isGraded = sub.status === 'Graded';
+                  return `
+                    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-xs transition-all hover:border-slate-300">
+                      <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+                        <div class="space-y-2 flex-1">
+                          <div class="flex flex-wrap items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800 font-mono border border-blue-200">${sub.courseCode}</span>
+                            <span class="text-xs font-semibold text-slate-700">${sub.courseName}</span>
+                            <span class="text-slate-400">•</span>
+                            <span class="px-2 py-0.5 rounded text-[11px] font-bold border ${isGraded ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'}">
+                              ${isGraded ? '✓ Verified & Evaluated' : '⏳ Awaiting Faculty Evaluation'}
+                            </span>
+                          </div>
+
+                          <h3 class="text-base font-bold text-slate-900">${sub.assignmentTitle}</h3>
+
+                          <div class="flex flex-wrap items-center gap-2 pt-1">
+                            <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs font-mono text-slate-700">
+                              <span class="text-red-600 font-bold">PDF</span>
+                              <span class="font-semibold text-slate-900">${sub.fileName}</span>
+                              <span class="text-slate-400 text-[11px]">(${sub.fileSize || '1.4 MB'})</span>
+                              <span class="text-emerald-600 text-[11px] font-sans font-bold">✓ Verified</span>
+                            </div>
+                            <span class="text-xs text-slate-500">Submitted: ${sub.submittedAt}</span>
+                          </div>
+
+                          ${sub.studentRemarks ? `
+                            <div class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100 mt-2">
+                              <strong class="text-slate-700">Student Remarks:</strong> ${sub.studentRemarks}
+                            </div>
+                          ` : ''}
+                        </div>
+
+                        <div class="min-w-[260px] flex flex-col justify-between space-y-3 bg-slate-50/70 p-4 rounded-lg border border-slate-200">
+                          <div>
+                            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Evaluation Results</div>
+                            ${isGraded ? `
+                              <div class="space-y-2">
+                                <div class="flex items-baseline gap-1.5">
+                                  <span class="text-2xl font-extrabold text-emerald-700">${sub.marksAwarded}</span>
+                                  <span class="text-xs text-slate-500 font-bold">/ ${sub.maxMarks || 20} Marks</span>
+                                </div>
+                                <div class="text-xs text-slate-700 bg-white p-2.5 rounded border border-emerald-200">
+                                  <div class="text-[10px] font-bold text-emerald-800 uppercase tracking-wide">Faculty Remarks (Dr. K. Srinivas)</div>
+                                  <div class="italic text-slate-800 mt-0.5">"${sub.facultyFeedback || 'Good submission. Accurate solution methodology.'}"</div>
+                                </div>
+                              </div>
+                            ` : `
+                              <div class="py-2">
+                                <span class="text-xs font-semibold text-amber-800 bg-amber-100/80 px-2.5 py-1 rounded border border-amber-300">
+                                  Reached Course Coordinator Desk
+                                </span>
+                                <p class="text-[11px] text-slate-500 mt-2">Dr. K. Srinivas is currently reviewing submissions for this module. Marks will update automatically.</p>
+                              </div>
+                            `}
+                          </div>
+
+                          <div class="pt-2 border-t border-slate-200 flex gap-2">
+                            <button
+                              type="button"
+                              onclick="openPdfViewer('${sub.id}')"
+                              class="flex-1 py-1.5 px-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                            >
+                              <span>📄</span>
+                              <span>View / Inspect PDF</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            `}
+          `;
+        } else {
+          // Faculty Submissions Review Desk
+          subContainer.innerHTML = `
+            <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+              <div class="bg-slate-900 text-white p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                    <h2 class="text-sm font-bold uppercase tracking-wider">Faculty Submissions Inbox • R22 C24 Coursework</h2>
+                  </div>
+                  <p class="text-xs text-slate-300 mt-1">Review student PDF submissions reached to your desk, inspect documents, and award marks</p>
+                </div>
+                <span class="text-xs px-2.5 py-1 rounded bg-slate-800 border border-slate-700 font-semibold text-slate-200">
+                  Total Received: ${state.submissions.length}
+                </span>
+              </div>
+
+              <div class="p-5">
+                ${state.submissions.length === 0 ? `
+                  <div class="text-center py-12 border border-dashed border-slate-300 rounded-lg">
+                    <div class="text-3xl mb-2">📥</div>
+                    <h3 class="text-sm font-bold text-slate-700">No Submissions in Queue</h3>
+                    <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1">When students submit assignments in PDF format, they will immediately appear here for review.</p>
+                  </div>
+                ` : `
+                  <div class="space-y-4">
+                    ${state.submissions.map((sub) => `
+                      <div class="rounded-xl border p-4 ${sub.status === 'Graded' ? 'border-emerald-200 bg-emerald-50/20' : 'border-slate-200 bg-white'}">
+                        <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+                          <div class="space-y-2 flex-1">
+                            <div class="flex flex-wrap items-center gap-2">
+                              <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-mono">${sub.courseCode}</span>
+                              <span class="text-xs font-semibold text-slate-700">${sub.courseName}</span>
+                              <span class="text-slate-300">•</span>
+                              <span class="text-xs font-mono font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">${sub.studentId}</span>
+                              <span class="text-xs font-semibold text-slate-700">${sub.studentName}</span>
+                              <span class="text-xs text-slate-400 font-mono">(${sub.studentEmail})</span>
+                            </div>
+                            <h4 class="text-sm font-bold text-slate-900">${sub.assignmentTitle}</h4>
+                            <div class="flex items-center gap-2 pt-1">
+                              <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-50 border border-red-200 text-xs font-semibold text-red-800 font-mono">
+                                <span class="font-bold">PDF</span>
+                                <span>${sub.fileName}</span>
+                                <span class="text-[11px] text-red-500 font-normal">(${sub.fileSize || '1.4 MB'})</span>
+                              </div>
+                              <button type="button" onclick="openPdfViewer('${sub.id}')" class="text-xs px-2.5 py-1.5 font-bold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer">
+                                🔍 Preview PDF
+                              </button>
+                            </div>
+                            <div class="text-xs text-slate-500 pt-1">
+                              <span>Submitted on: <strong class="text-slate-700">${sub.submittedAt}</strong></span>
+                              ${sub.studentRemarks ? `<p class="mt-1 text-slate-600 bg-slate-50 p-2 rounded border border-slate-200 italic">Student Note: "${sub.studentRemarks}"</p>` : ''}
+                            </div>
+                          </div>
+
+                          <div class="lg:w-72 bg-slate-50 p-3.5 rounded-lg border border-slate-200 text-xs space-y-2">
+                            <div class="flex items-center justify-between">
+                              <span class="font-semibold text-slate-600">Review Status:</span>
+                              <span class="px-2 py-0.5 rounded font-bold ${sub.status === 'Graded' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                                ${sub.status}
+                              </span>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                              <span class="font-semibold text-slate-600">Marks Awarded:</span>
+                              <span class="font-bold text-slate-900 text-sm">
+                                ${sub.marksAwarded !== null && sub.marksAwarded !== undefined ? `${sub.marksAwarded} / ${sub.maxMarks || 20}` : 'Pending'}
+                              </span>
+                            </div>
+                            ${sub.facultyFeedback ? `
+                              <div class="text-[11px] text-slate-600 bg-emerald-50/60 p-2 rounded border border-emerald-200">
+                                <strong>Feedback:</strong> ${sub.facultyFeedback}
+                              </div>
+                            ` : ''}
+                            <button
+                              type="button"
+                              onclick="gradeSubmission('${sub.id}')"
+                              class="w-full mt-2 py-1.5 rounded bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs cursor-pointer shadow-xs"
+                            >
+                              ${sub.status === 'Graded' ? 'Modify Grade & Comments' : 'Grade & Verify Submission'}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    `).join('')}
+                  </div>
+                `}
+              </div>
+            </div>
+          `;
+        }
+      }
+    }
+
+    // Initialize application
+    syncAuthState();
+  </script>
+</body>
+</html>
