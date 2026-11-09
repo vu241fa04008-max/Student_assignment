@@ -74,7 +74,8 @@ if (!MONGODB_URI || MONGODB_URI.includes('<db_password>')) {
 }
 
 // Start Server
-app.listen(PORT, () => {
-  console.log(`\n🚀 Vignan Academic Portal Backend listening on http://localhost:${PORT}`);
-  console.log(`📡 Health Check URL: http://localhost:${PORT}/api/health\n`);
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
 });
